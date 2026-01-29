@@ -196,19 +196,19 @@ const INDEX_HTML: &str = r#"
     <script>
         const noteElement = document.getElementById('note');
 
-        // 1️⃣ 禁用快捷键
-        noteElement.addEventListener('keydown', (e) => {
-            if (
-                (e.metaKey && e.key === 'z') ||
-                (e.ctrlKey && (e.key === 'z' || e.key === 'y'))
-            ) {
+        noteElement.addEventListener('beforeinput', (e) => {
+            if (e.inputType === 'historyUndo' || e.inputType === 'historyRedo') {
                 e.preventDefault();
             }
         });
 
-        // 2️⃣ 禁用浏览器历史操作
-        noteElement.addEventListener('beforeinput', (e) => {
-            if (e.inputType === 'historyUndo' || e.inputType === 'historyRedo') {
+        noteElement.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            const isZ = key === 'z';
+            const isY = key === 'y';
+            const modifier = e.ctrlKey || e.metaKey;
+
+            if (modifier && (isZ || isY)) {
                 e.preventDefault();
             }
         });
