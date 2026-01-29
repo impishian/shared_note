@@ -194,6 +194,25 @@ const INDEX_HTML: &str = r#"
     <div id="note" contenteditable="true"></div>
     
     <script>
+        const noteElement = document.getElementById('note');
+
+        // 1️⃣ 禁用快捷键
+        noteElement.addEventListener('keydown', (e) => {
+            if (
+                (e.metaKey && e.key === 'z') ||
+                (e.ctrlKey && (e.key === 'z' || e.key === 'y'))
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // 2️⃣ 禁用浏览器历史操作
+        noteElement.addEventListener('beforeinput', (e) => {
+            if (e.inputType === 'historyUndo' || e.inputType === 'historyRedo') {
+                e.preventDefault();
+            }
+        });
+
         class SharedNote {
             constructor() {
                 this.ws = null;
